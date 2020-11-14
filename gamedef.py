@@ -1,4 +1,5 @@
 import discord
+import random
 from playerdef import Player
 
 class Game:
@@ -7,6 +8,7 @@ class Game:
         self.players = {}
         self.numPlayers = 0
         self.status = "setup"
+        self.deck = []
 
     # add player to game, takes in user who ran the join command
     def addPlayer(self, user : discord.User):
@@ -35,6 +37,26 @@ class Game:
         self.players = {}
         self.numPlayers = 0
         self.status = "setup"
+
+    # generate deck from carList.txt
+    # cards are arrays ex. ['1', '1', 'one']
+    def generateDeck(self):
+        # initialize deck from carList.txt
+        with open("cardList.txt") as f:
+            self.deck = [card.split(',') for card in f.read().splitlines()]
+        self.shuffleDeck()
+
+    # shuffles the deck
+    def shuffleDeck(self):
+        random.shuffle(self.deck)
+
+    # returns and removes last card in deck
+    def drawCard(self):
+        # todo when the deck runs out of cards
+        if len(self.deck) != 0:
+            topCard = self.deck[-1]
+            self.deck.pop(-1)
+            return topCard
 
     # debugging info
     def __repr__(self):
