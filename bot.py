@@ -81,6 +81,11 @@ async def quit(ctx):
     if result:
         await ctx.send(f'{ctx.author} left the game.')
 
+# tutorial youtube link command
+@client.command()
+async def howtoplay(ctx):
+    await ctx.send( "Here is the link for the tutorial of the game\n"
+                    "https://www.youtube.com/watch?v=Xk0y7BSuJio")
 
 # run bot
 client.run(TOKEN)
