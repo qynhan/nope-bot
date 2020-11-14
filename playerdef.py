@@ -12,4 +12,4 @@ class Player:
 
     # debugging info
     def __repr__(self):
-        return f'user: {self.user}'
+        return f'user: {self.user}, hand: {self.hand}'

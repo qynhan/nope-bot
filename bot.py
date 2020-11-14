@@ -99,6 +99,9 @@ async def start(ctx):
         else:
             game.status = "playing"
             await ctx.send("Ready to start!")
+            game.generateDeck()
+            await game.dealCards()
+
 
 # end game (for debugging only)
 @client.command()
@@ -122,7 +125,7 @@ async def howtoplay(ctx):
 @commands.check(checkDev)
 async def test(ctx):
     game.generateDeck()
-    game.dealCards()
+    await game.dealCards()
 
     for player in game.players.values():
         print(player.hand)
@@ -131,16 +134,15 @@ async def test(ctx):
             print(player.hand[i])
             await ctx.send(player.hand[i])
 
-    #for i in range(len(game.deck)):
-        #print(repr(game.deck[i]))
-        #await ctx.send(game.deck[i])
-    # have 3 accounts join the game (carly, carly's 1st alt, carly's second alt)
-    #game.addPlayer(client.get_user(467381662582308864))
-
-    # bug: bot cannot find the alt users
-    #game.addPlayer(client.get_user(467417292389482497))
-    #game.addPlayer(client.get_user(467418093514391552))
-
+# adds author and two mentioned users to a game to make testing quicker
+@client.command(aliases=['!'])
+# only developers may run this command
+@commands.check(checkDev)
+async def setup(ctx, user1: discord.User, user2: discord.User):
+    game.addPlayer(ctx.author)
+    game.addPlayer(user1)
+    game.addPlayer(user2)
+    await table(ctx)
 
 # run bot
 client.run(TOKEN)
