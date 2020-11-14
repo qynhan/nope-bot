@@ -3,6 +3,8 @@ from discord.ext import commands
 from discord import File, Embed
 from random import randint
 
+from carddef import Card
+from playerdef import Player
 from gamedef import Game
 # create game
 game = Game()
@@ -119,8 +121,12 @@ async def howtoplay(ctx):
 # only developers may run this command
 @commands.check(checkDev)
 async def test(ctx):
+    game.generateDeck()
+    for i in range(len(game.deck)):
+        print(repr(game.deck[i]))
+        #await ctx.send(game.deck[i])
     # have 3 accounts join the game (carly, carly's 1st alt, carly's second alt)
-    game.addPlayer(client.get_user(467381662582308864))
+    #game.addPlayer(client.get_user(467381662582308864))
 
     # bug: bot cannot find the alt users
     #game.addPlayer(client.get_user(467417292389482497))
