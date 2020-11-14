@@ -3,17 +3,28 @@ from discord.ext import commands
 from discord import File, Embed
 from random import randint
 
+from gamedef import Game
+# create game
+game = Game()
 
+# get bot token
 f = open("token.txt", "r")
 TOKEN = f.read()
 f.close()
-client = commands.Bot(command_prefix="!", case_insensitive=True)
 
+# create bot
+PREFIX = "!"
+client = commands.Bot(command_prefix=PREFIX, case_insensitive=True)
 
 # runs when the bot is first online
 @client.event
 async def on_ready():
+    # set status
     await client.change_presence(activity=discord.Game('Nope!'))
+
+    # make a new game
+    game = Game()
+
     print("ready!")
 
 # common ping command for connection testing
@@ -38,4 +49,38 @@ async def help(ctx):
                    "!help - display this screen again\n"
                    "!howtoplay - display the instructions for the game")
 
+# show game status
+@client.command(aliases=["t"])
+async def table(ctx):
+    if game.numPlayers == 0:
+        await ctx.send("No one has joined the game yet")
+    else:
+        if game.status == "setup":
+            table = "The following people have joined the game:\n"
+            for playerID in game.players:
+                player = game.players[playerID]
+                table += f'{player.user} ({player.user.display_name})\n'
+            await ctx.send(table)
+        else:
+            await ctx.send("Table view for in-progress game not yet implemented") # todo
+
+# join game
+@client.command()
+async def join(ctx):
+    if game.status != "setup":
+        await ctx.send('You cannot join the game after it has started')
+    else:
+        result = game.addPlayer(ctx.author)
+        if result:
+            await ctx.send(f'{ctx.author} joined the game!')
+
+# quit game
+@client.command()
+async def quit(ctx):
+    result = game.removePlayer(ctx.author)
+    if result:
+        await ctx.send(f'{ctx.author} left the game.')
+
+
+# run bot
 client.run(TOKEN)
