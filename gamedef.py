@@ -55,6 +55,13 @@ class Game:
     def shuffleDeck(self):
         random.shuffle(self.drawPile)
 
+    # deals the cards to the players
+    def dealCards(self):
+        player: Player
+        for player in self.players.values():
+            for i in range(7):
+                player.hand.append(self.drawCard())
+
     # returns and removes last card in deck
     def drawCard(self):
         # if draw pile is empty, shuffle discard pile into it
@@ -67,10 +74,6 @@ class Game:
         topCard = self.drawPile[-1]
         self.drawPile.pop(-1)
         return topCard
-
-
-
-
 
 
     # debugging info

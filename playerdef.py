@@ -4,6 +4,7 @@ class Player:
     # constructor, takes user argument - a discord object representing a user
     def __init__(self, user : discord.user):
         self.user = user
+        self.hand = []
 
     # string representation for print statements
     def __str__(self):
