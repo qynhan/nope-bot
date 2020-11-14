@@ -69,7 +69,7 @@ async def table(ctx):
             await ctx.send("Table view for in-progress game not yet implemented") # todo
 
 # join game
-@client.command()
+@client.command(aliases=["j"])
 async def join(ctx):
     if game.status != "setup":
         await ctx.send('You cannot join the game after it has started')
@@ -79,14 +79,15 @@ async def join(ctx):
             await ctx.send(f'{ctx.author} joined the game!')
 
 # quit game
-@client.command()
+@client.command(aliases=["q"])
 async def quit(ctx):
     result = game.removePlayer(ctx.author)
     if result:
         await ctx.send(f'{ctx.author} left the game.')
 
+
 # start game
-@client.command()
+@client.command(aliases=["s"])
 async def start(ctx):
     # status must be setup
     if game.status == "setup":
@@ -106,6 +107,12 @@ async def end(ctx):
     game.newGame()
 
     await ctx.send("Game ended.")
+
+# tutorial youtube link command
+@client.command(aliases=["tutorial", "howto", "htp"])
+async def howtoplay(ctx):
+    await ctx.send( "Here is the link for the tutorial of the game\n"
+                    "https://www.youtube.com/watch?v=Xk0y7BSuJio")
 
 # helper function for devs to automate tests
 @client.command()
