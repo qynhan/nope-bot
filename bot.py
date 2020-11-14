@@ -16,6 +16,10 @@ f.close()
 PREFIX = "!"
 client = commands.Bot(command_prefix=PREFIX, case_insensitive=True)
 
+# check if the person who sent the command is a developer of the bot
+def checkDev(ctx):
+    return ctx.author.id == 467381662582308864 or ctx.author.id == 262273851310735361 or ctx.author.id == 270781353228763136 or ctx.author.id == 628390090514628618
+
 # runs when the bot is first online
 @client.event
 async def on_ready():
@@ -80,6 +84,38 @@ async def quit(ctx):
     result = game.removePlayer(ctx.author)
     if result:
         await ctx.send(f'{ctx.author} left the game.')
+
+# start game
+@client.command()
+async def start(ctx):
+    # status must be setup
+    if game.status == "setup":
+        # number of players must be > 2
+        if game.numPlayers < 3:
+            await ctx.send('At least three players need to join the game before it can start!')
+        else:
+            game.status = "playing"
+            await ctx.send("Ready to start!")
+
+# end game (for debugging only)
+@client.command()
+# only developers may run this command
+@commands.check(checkDev)
+async def end(ctx):
+    # create a new game
+    game.newGame()
+
+    await ctx.send("Game ended.")
+
+# helper function for devs to automate tests
+@client.command()
+# only developers may run this command
+@commands.check(checkDev)
+async def test(ctx):
+    # have 3 accounts join the game (carly, carly's 1st alt, carly's second alt)
+    game.addPlayer(client.get_user(467381662582308864))
+    game.addPlayer(client.get_user(467417292389482497))
+    game.addPlayer(client.get_user(467418093514391552))
 
 
 # run bot

@@ -30,6 +30,12 @@ class Game:
 
         return playerQuit
 
+    # clear current values to set up for a new game
+    def newGame(self):
+        self.players = {}
+        self.numPlayers = 0
+        self.status = "setup"
+
     # debugging info
     def __repr__(self):
         return f'players: {self.players}, numPlayers: {self.numPlayers}, status: {self.status}'
