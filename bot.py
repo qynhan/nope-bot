@@ -122,8 +122,17 @@ async def howtoplay(ctx):
 @commands.check(checkDev)
 async def test(ctx):
     game.generateDeck()
-    for i in range(len(game.deck)):
-        print(repr(game.deck[i]))
+    game.dealCards()
+
+    for player in game.players.values():
+        print(player.hand)
+        print(player)
+        for i in range(len(player.hand)):
+            print(player.hand[i])
+            await ctx.send(player.hand[i])
+
+    #for i in range(len(game.deck)):
+        #print(repr(game.deck[i]))
         #await ctx.send(game.deck[i])
     # have 3 accounts join the game (carly, carly's 1st alt, carly's second alt)
     #game.addPlayer(client.get_user(467381662582308864))
