@@ -21,4 +21,10 @@ async def on_ready():
 async def ping(ctx):
     await ctx.send(f'pong! {round(client.latency * 1000)}ms')
 
+#help command
+client.remove_command("help")
+@client.command()
+async def help(ctx):
+    await ctx.send(f'I am here to help!')
+
 client.run(TOKEN)
