@@ -114,8 +114,10 @@ async def end(ctx):
 async def test(ctx):
     # have 3 accounts join the game (carly, carly's 1st alt, carly's second alt)
     game.addPlayer(client.get_user(467381662582308864))
-    game.addPlayer(client.get_user(467417292389482497))
-    game.addPlayer(client.get_user(467418093514391552))
+
+    # bug: bot cannot find the alt users
+    #game.addPlayer(client.get_user(467417292389482497))
+    #game.addPlayer(client.get_user(467418093514391552))
 
 
 # run bot
