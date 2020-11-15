@@ -106,11 +106,6 @@ class Game:
                 message.add_field(name="Here are the players in this game:", value=table)
             await ctx.send(embed=message)
 
-    def checkTwo(self, card1, card2):
-        for color in card1.colors:
-            if color in card2.colors:
-                return True
-        return False
 
     def strToCardList(self, message):
         # ex. br3 bg2
@@ -161,6 +156,7 @@ class Game:
             if isValidColor:
                 return True
         return False
+
 
     # debugging info
     def __repr__(self):
