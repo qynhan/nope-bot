@@ -10,8 +10,8 @@ class Player:
     def __init__(self, user : discord.user):
         self.user = user
         self.hand = []
-        self.play = []
         self.drewCard = False
+        self.play = []
 
     # send the player their hand, title is a string that will be the beginning of the message to the player
     async def sendHand(self, title):
