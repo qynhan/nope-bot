@@ -147,11 +147,6 @@ async def howtoplay(ctx):
     await ctx.send( "Here is the link for the tutorial of the game\n"
                     "https://www.youtube.com/watch?v=Xk0y7BSuJio")
 
-
-@client.command()
-async def play(ctx, *, message):
-    print(game.validPlay(message))
-
 # helper function for devs to automate tests
 @client.command()
 # only developers may run this command
@@ -159,7 +154,7 @@ async def play(ctx, *, message):
 async def test(ctx):
     await game.showTable(ctx, showPlayers=False)
     game.generateDeck()
-    game.dealCards()
+    await game.dealCards()
 
     for player in game.players.values():
         print(player.hand)
