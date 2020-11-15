@@ -153,7 +153,7 @@ class Game:
                     self.message = "You cannot play any card.  Draw if you have not drawn yet, say nope! if you have already drawn."
                     return False
                 else:
-                    play = message.content.split()[1:]
+                    play = " ".join(message.content.split()[1:])
                     if self.validPlay(play, self.currentPlayer):
                         self.message = "Valid play"
                         self.getNextPlayer()
@@ -165,10 +165,10 @@ class Game:
     def strToCardList(self, message):
         # ex. br3 bg2
         cardList = []
-
+        print(f'message:"{message}"')
         for word in message.split(' '):
             card_arr = []
-            if len(word) > 3:
+            if len(word) != 3:
                 return None
             if word[0] not in list(letterColors) \
                     or word[1] not in list(letterColors) \
