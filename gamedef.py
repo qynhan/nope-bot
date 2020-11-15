@@ -101,6 +101,11 @@ class Game:
                 message.add_field(name="Here are the players in this game:", value=table)
             await ctx.send(embed=message)
 
+    def validPlay(self, message):
+        if message.author.id == self.currentPlayer.user.id and message.content.lower()[:2] == "!p":
+            return True
+        return False
+
 
     # debugging info
     def __repr__(self):
