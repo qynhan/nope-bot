@@ -111,43 +111,24 @@ class Game:
     # precondition the number on the top card is the same as the number of cards played
     def validPlay(self, message, player):
         topCard = self.currentCard
-        cardList = []
-        pickedCards = message.split(" ")
-        for card in pickedCards:
-            if not player.haveCard(card):
-                return False
-        for i in range(len(pickedCards)):
-            cardList.append(player.getCard(pickedCards[i]))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        # if topCard.value == "one":
-        #     return self.checkTwo(cardList[0], topCard)
-        # if topCard.values == "two":
-        #     if not self.checkTwo(cardList[0], cardList[1]) \
-        #             or not self.checkTwo(cardList[0], topCard) \
-        #             or not self.checkTwo(cardList[1], topCard):
+        cardList = message
+        # pickedCards = message.split(" ")
+        # for card in pickedCards:
+        #     if not player.haveCard(card):
         #         return False
-        # if topCard.value == "three":
-        #     if not self.checkTwo(cardList[0], cardList[1]) \
-        #             or not self.checkTwo(cardList[0], cardList[2]) \
-        #             or not self.checkTwo(cardList[1], cardList[2]) \
-        #             or not self.checkTwo(cardList[0], topCard) \
-        #             or not self.checkTwo(cardList[1], topCard) or \
-        #             not self.checkTwo(cardList[2], topCard) :
-        #         return False
-        # return True
+        # for card in pickedCards:
+        #     cardList.append(player.getCard(card))
+
+        for check_color in self.currentCard.colors: # current card is blue red
+            isValidColor = True
+            for card in cardList:
+                if check_color not in card.colors:
+                    isValidColor = False
+                    break
+            if isValidColor:
+                return True
+        return False
+
 
     # debugging info
     def __repr__(self):

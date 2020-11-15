@@ -15,11 +15,12 @@ class Player:
     def haveCard(self, cardString):
         haveCard = False
 
+        #ry1
         for card in self.hand:
             if haveCard:
                 return haveCard
-            for i in len(cardString):
-                if letterColors(cardString[i]) in card.colors or letterColors(cardString[i]) == card.value :
+            for letter in cardString:
+                if letterColors[letter] in card.colors or letterColors[letter] == card.value :
                     haveCard = True
                 else:
                     haveCard = False
@@ -32,8 +33,8 @@ class Player:
         for card in self.hand:
             if theCard:
                 return self.hand.pop(self.hand.index(card))
-            for i in len(cardString):
-                if letterColors(cardString[i]) in card.colors or letterColors(cardString[i]) == card.value:
+            for letter in cardString:
+                if letterColors[letter] in card.colors or letterColors[letter] == card.value:
                     theCard = True
                 else:
                     theCard = False
