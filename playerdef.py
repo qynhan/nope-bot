@@ -1,12 +1,17 @@
 import discord
 from discord import Embed
 
+# the colors the letters represent
+letterColors = {'r' : 'red', 'y' : 'yellow', 'b' : 'blue', 'g' : 'green', 'w' : 'wild',
+                'n': 'nominate', 'i' :'invisible', 'R' : 'reset'}
+
 class Player:
     # constructor, takes user argument - a discord object representing a user
     def __init__(self, user : discord.user):
         self.user = user
         self.hand = []
         self.drewCard = False
+        self.play = []
 
     # send the player their hand, title is a string that will be the beginning of the message to the player
     async def sendHand(self, title):
