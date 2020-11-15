@@ -6,6 +6,9 @@ from carddef import Card
 
 letterColors = {'r': '1', 'y': '2', 'b': '3', 'g': '4', 'w': '5'}
 letterType = {'1': 'one', '2': 'two', '3': 'three'}
+# what 3rd sorting digit corresponds to what value
+valueNums = {'one' : 1, 'two' : 2, 'three' : 3, 'nominate' : 4, 'invisible' : 5, 'wild' : 6, 'reset' : 7}
+
 
 
 class Game:
@@ -196,6 +199,9 @@ class Game:
         # create list of card object from string message
         cardList = self.strToCardList(message)
         if not cardList:
+            return False
+
+        if len(cardList) != valueNums[self.currentCard.value]:
             return False
 
         for card in cardList:
