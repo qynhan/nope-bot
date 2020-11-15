@@ -14,6 +14,7 @@ class Game:
         self.drawPile = []
         self.discardPile = []
         self.currentCard = None
+        self.currentPlayer = None
 
     # add player to game, takes in user who ran the join command
     def addPlayer(self, user : discord.User):
@@ -80,6 +81,26 @@ class Game:
             # sort hand and send to player
             player.hand.sort(key=lambda card: card.id)
             await player.sendHand("You were dealt the following cards:")
+
+    async def showTable(self, ctx, showPlayers=True):
+        if self.status == "setup":
+            table = ''
+            for playerID in self.players:
+                player = self.players[playerID]
+                table += f'{player.user} ({player.user.display_name})\n'
+            message = Embed(title="The following people have joined the game:", description=table, color=0x00CFCF)
+            message.set_footer(text="The game can start when at least 3 people have joined.")
+            await ctx.send(embed=message)
+        else:
+            message = Embed(title=f'The current card in play is: {self.currentCard}', description=f'It is **{self.currentPlayer.user.display_name}\'s** turn!', color=0x00CFCF)
+            if showPlayers:
+                table = ''
+                for playerID in self.players:
+                    player = self.players[playerID]
+                    table += f'{player.user.display_name} | {len(player.hand)} card{"s" if len(player.hand) > 1 else ""}.\n'
+                message.add_field(name="Here are the players in this game:", value=table)
+            await ctx.send(embed=message)
+
 
     # debugging info
     def __repr__(self):
