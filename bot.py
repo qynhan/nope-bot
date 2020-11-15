@@ -1,5 +1,5 @@
 import discord
-from discord.ext import commands
+from discord.ext import tasks, commands
 from discord import File, Embed
 from random import randint
 
@@ -33,6 +33,13 @@ async def on_ready():
 
     print("ready!")
 
+@tasks.loop(seconds=1, count=None)
+async def messenger(ctx):
+    if game.message:
+        await ctx.send(game.message)
+        game.message = None
+
+
 # common ping command for connection testing
 @client.command()
 async def ping(ctx):
@@ -51,7 +58,7 @@ async def help(ctx):
                    "!hand - I will send you a dm with the cards in your hand\n"
                    "!play - play a card from your hand\n"
                    "!draw - draw a card from the table\n"
-                   "!nope - shout NOPE!\n"
+                   "nope! - shout NOPE!\n"
                    "!help - display this screen again\n"
                    "!howtoplay - display the instructions for the game")
 
@@ -94,12 +101,15 @@ async def start(ctx):
             game.status = "playing"
             await ctx.send("Ready to start!")
             await game.dealCards()
-            for playerID in game.players:
-                player = game.players[playerID]
-                game.currentPlayer = player
-                await player.sendHand("It's your turn! Here is your hand:")
+            game.ctx = ctx
+            # the first player if the first to join
+            game.currentPlayer = game.players[list(game.players.keys())[0]]
+            messenger.start(ctx)
+            while game.numPlayers != 0:
+                await game.currentPlayer.sendHand("It's your turn! Here is your hand:")
                 await game.showTable(ctx, showPlayers=False)
-                await client.wait_for('message', check=game.validPlay)
+                await client.wait_for('message', check=game.validMove)
+            messenger.stop()
 
 # end game (for debugging only)
 @client.command()
@@ -120,16 +130,22 @@ async def hand(ctx):
     else:
         await game.players[ctx.author.id].sendHand("Here is your hand:")
 
+# play card(s) or draw a card
+@client.command(aliases=["p", "d", "draw"])
+async def play(ctx):
+    if game.status != "playing":
+        await ctx.send("The game hasn't started yet.")
+    # this needs to be commented out for now because it will tell a player it's
+    # not their turn right after they play otherwise
+    #elif ctx.author.id != game.currentPlayer.user.id:
+        #await ctx.send("It's not your turn!")
+    # valid moves are handled by game.vaildPlay()
+
 # tutorial youtube link command
 @client.command(aliases=["tutorial", "howto", "htp"])
 async def howtoplay(ctx):
     await ctx.send( "Here is the link for the tutorial of the game\n"
                     "https://www.youtube.com/watch?v=Xk0y7BSuJio")
-
-
-@client.command()
-async def play(ctx, *, message):
-    print(game.validPlay(message))
 
 # helper function for devs to automate tests
 @client.command()
@@ -138,7 +154,7 @@ async def play(ctx, *, message):
 async def test(ctx):
     await game.showTable(ctx, showPlayers=False)
     game.generateDeck()
-    game.dealCards()
+    await game.dealCards()
 
     for player in game.players.values():
         print(player.hand)
