@@ -71,18 +71,15 @@ class Game:
 
     # deals the cards to the players
     async def dealCards(self):
+        # deal each play 7 cards
         player: Player
-        handDisplay = ''
         for player in self.players.values():
             for i in range(7):
-                card = self.drawCard()
-                player.hand.append(card)
-                handDisplay += str(card)
-                if i < 6:
-                    handDisplay += ' | '
-            message = Embed(title="You were dealt the following cards:", description=handDisplay, color=0x00CFCF)
-            message.set_footer(text=f'You currently have 7 cards.')
-            await player.user.send(embed=message)
+                player.hand.append(self.drawCard())
+
+            # sort hand and send to player
+            player.hand.sort(key=lambda card: card.id)
+            await player.sendHand("You were dealt the following cards:")
 
     # debugging info
     def __repr__(self):

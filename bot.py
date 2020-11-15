@@ -87,7 +87,6 @@ async def quit(ctx):
     if result:
         await ctx.send(f'{ctx.author} left the game.')
 
-
 # start game
 @client.command(aliases=["s"])
 async def start(ctx):
@@ -101,7 +100,9 @@ async def start(ctx):
             await ctx.send("Ready to start!")
             game.generateDeck()
             await game.dealCards()
-
+            for playerID in game.players:
+                player = game.players[playerID]
+                await player.sendHand("It's your turn! Here is your hand:")
 
 # end game (for debugging only)
 @client.command()
@@ -112,6 +113,15 @@ async def end(ctx):
     game.newGame()
 
     await ctx.send("Game ended.")
+
+# see hand
+@client.command(aliases=["h"])
+async def hand(ctx):
+    # do not show hand when they do not have cards yet
+    if ctx.author.id not in game.players or game.status != "playing":
+        await ctx.send("You have no cards.")
+    else:
+        await game.players[ctx.author.id].sendHand("Here is your hand:")
 
 # tutorial youtube link command
 @client.command(aliases=["tutorial", "howto", "htp"])
