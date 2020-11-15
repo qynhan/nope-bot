@@ -6,9 +6,9 @@ from playerdef import Player
 from carddef import Card
 
 letterColors = {'r': '1', 'y': '2', 'b': '3', 'g': '4', 'w': '5'}
-letterType = {'1': 'one', '2': 'two', '3': 'three'}
+letterType = {'1': 'one', '2': 'two', '3': 'three', 'r' : 'reset', 'w' : 'wild', 'i': 'invisible', 'r' : 'reset'}
 # what 3rd sorting digit corresponds to what value
-valueNums = {'one' : 1, 'two' : 2, 'three' : 3, 'nominate' : 4, 'invisible' : 5, 'wild' : 6, 'reset' : 7}
+valueNums = {'one' : 1, 'two' : 2, 'three' : 3, 'nominate' : 4, 'invisible' : 5, 'wild' : 1, 'reset' : 7}
 
 
 
@@ -172,19 +172,23 @@ class Game:
         print(f'message:"{message}"')
         for word in message.split(' '):
             card_arr = []
-            if len(word) != 3:
-                return None
-            if word[0] not in list(letterColors) \
-                    or word[1] not in list(letterColors) \
-                    or word[2] not in list(letterType):
-                return None
-            card_arr.append(letterColors[word[0]])
-            card_arr.append(letterColors[word[1]])
-            card_arr.append(letterType[word[2]])
-            cardList.append(Card(card_arr))
+            if len(word) == 1 and word[0] in list(letterType):
+                cardList.append(Card(['5','0','wild']))
+                print("i am here1")
+                print(cardList)
+            if len(word) == 3:
+                if word[0] not in list(letterColors) \
+                        or word[1] not in list(letterColors) \
+                        or word[2] not in list(letterType):
+                    return None
+
+                card_arr.append(letterColors[word[0]])
+                card_arr.append(letterColors[word[1]])
+                card_arr.append(letterType[word[2]])
+                cardList.append(Card(card_arr))
+
         return cardList
 
-    # precondition the number on the top card is the same as the number of cards played
     def validPlay(self, message, player):
         # check cards in hand
         # check colors
@@ -200,14 +204,20 @@ class Game:
         # create list of card object from string message
         cardList = self.strToCardList(message)
         if not cardList:
+            print(cardList)
+            print("cardlist is empty")
             return False
 
         if len(cardList) != valueNums[self.currentCard.value]:
+            print('not enough cards')
             return False
 
         hand_copy = copy.deepcopy(player.hand)
         for card in cardList:
             if card not in hand_copy:
+                print("you shouldnt be here")
+                print(card)
+                print(hand_copy)
                 return False
             else:
                 hand_copy.remove(card)
@@ -215,6 +225,9 @@ class Game:
         for check_color in self.currentCard.colors:  # ex. current card is blue red
             isValidColor = True
             for card in cardList:
+                # if card.value == 'wild':
+                #     print("i am here2")
+                #     return T
                 if check_color not in card.colors:
                     isValidColor = False
                     break

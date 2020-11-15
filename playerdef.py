@@ -2,10 +2,7 @@ import discord
 from discord import Embed
 
 # the colors the letters represent
-letterColors = {'r' : 'red', 'y' : 'yellow', 'b' : 'blue', 'g' : 'green', 'w' : 'wild',
-                'n': 'nominate', 'i' :'invisible', 'R' : 'reset'}
-
-hfdghfbh = {'n' : 'nominate', 'i' : "invisible", 'R' : 'reset'}
+letterColors = {'r' : 'red', 'y' : 'yellow', 'b' : 'blue', 'g' : 'green', 'w' : 'wild' }
 
 class Player:
     # constructor, takes user argument - a discord object representing a user

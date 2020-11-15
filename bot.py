@@ -159,10 +159,11 @@ async def test(ctx):
     for player in game.players.values():
         print(player.hand)
         print(player)
+        print(len(player.hand))
         for i in range(len(player.hand)):
             print(player.hand[i])
             await ctx.send(player.hand[i])
-            await ctx.send(game.currentCard)
+            #await ctx.send(game.currentCard)
 
 # adds author and two mentioned users to a game to make testing quicker
 @client.command(aliases=['!'])
