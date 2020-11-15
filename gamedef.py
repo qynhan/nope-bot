@@ -75,6 +75,39 @@ class Game:
         self.drawPile.pop(-1)
         return topCard
 
+    def checkTwo(self, card1, card2):
+            for color in card1.colors:
+                if color in card2.colors:
+                    return True
+                else:
+                    return False
+
+    # precondition the number on the top card is the same as the number of cards played
+    def validPlay(self, message, player):
+        topCard = self.currentCard
+        cardList = []
+        pickedCards = message.split(" ")
+        if not player.haveCard():
+            return False
+        for i in len(pickedCards):
+            cardList.append(player.getCard(message.split[i]))
+
+        if topCard.value == "one":
+            return self.checkTwo(cardList[0], topCard)
+        if topCard.values == "two":
+            if not self.checkTwo(cardList[0], cardList[1]) \
+                    or not self.checkTwo(cardList[0], topCard) \
+                    or not self.checkTwo(cardList[1], topCard):
+                return False
+        if topCard.value == "three":
+            if not self.checkTwo(cardList[0], cardList[1]) \
+                    or not self.checkTwo(cardList[0], cardList[2]) \
+                    or not self.checkTwo(cardList[1], cardList[2]) \
+                    or not self.checkTwo(cardList[0], topCard) \
+                    or not self.checkTwo(cardList[1], topCard) or \
+                    not self.checkTwo(cardList[2], topCard) :
+                return False
+        return True
 
     # debugging info
     def __repr__(self):
