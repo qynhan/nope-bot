@@ -61,14 +61,7 @@ async def table(ctx):
     if game.numPlayers == 0:
         await ctx.send("No one has joined the game yet")
     else:
-        if game.status == "setup":
-            table = "The following people have joined the game:\n"
-            for playerID in game.players:
-                player = game.players[playerID]
-                table += f'{player.user} ({player.user.display_name})\n'
-            await ctx.send(table)
-        else:
-            await ctx.send("Table view for in-progress game not yet implemented") # todo
+        await game.showTable(ctx)
 
 # join game
 @client.command(aliases=["j"])
@@ -96,13 +89,16 @@ async def start(ctx):
         if game.numPlayers < 3:
             await ctx.send('At least three players need to join the game before it can start!')
         else:
+            game.generateDeck()
+            game.currentCard = game.drawCard()
             game.status = "playing"
             await ctx.send("Ready to start!")
-            game.generateDeck()
             await game.dealCards()
             for playerID in game.players:
                 player = game.players[playerID]
+                game.currentPlayer = player
                 await player.sendHand("It's your turn! Here is your hand:")
+                await game.showTable(ctx, showPlayers=False)
 
 # end game (for debugging only)
 @client.command()
@@ -134,15 +130,7 @@ async def howtoplay(ctx):
 # only developers may run this command
 @commands.check(checkDev)
 async def test(ctx):
-    game.generateDeck()
-    await game.dealCards()
-
-    for player in game.players.values():
-        print(player.hand)
-        print(player)
-        for i in range(len(player.hand)):
-            print(player.hand[i])
-            await ctx.send(player.hand[i])
+    await game.showTable(ctx, showPlayers=False)
 
 # adds author and two mentioned users to a game to make testing quicker
 @client.command(aliases=['!'])
