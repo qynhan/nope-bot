@@ -34,21 +34,22 @@ class Card:
             else:
                 self.colors = [colorNums[color1], colorNums[color2]]
 
-    # string representation for print statements
-    def __str__(self):
-        rep = ''
+        # generate string representation
+        self.rep = ''
 
         # double-color
         if len(self.colors) == 2:
-            rep += emotes[self.colors[0]] + emotes[self.colors[1]]
+            self.rep += emotes[self.colors[0]] + emotes[self.colors[1]]
         # single-color
         elif len(self.colors) == 1:
-            rep += emotes[self.colors[0]]
+            self.rep += emotes[self.colors[0]]
         # wild card color is not shown
 
-        rep += ' ' + emotes[self.value]
+        self.rep += ' ' + emotes[self.value]
 
-        return rep
+    # string representation for print statements
+    def __str__(self):
+        return self.rep
 
     # debugging info
     def __repr__(self):
