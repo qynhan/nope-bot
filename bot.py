@@ -99,6 +99,7 @@ async def start(ctx):
                 game.currentPlayer = player
                 await player.sendHand("It's your turn! Here is your hand:")
                 await game.showTable(ctx, showPlayers=False)
+                await client.wait_for('message', check=game.validPlay)
 
 # end game (for debugging only)
 @client.command()
