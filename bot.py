@@ -157,17 +157,5 @@ async def setup(ctx, user1: discord.User, user2: discord.User):
     game.addPlayer(user2)
     await table(ctx)
 
-print(test)
-
 # run bot
-# client.run(TOKEN)
-game_test = Game()
-game_test.generateDeck()
-
-game_test.currentCard = Card(["2", "3", "two"])
-print(game_test.currentCard)
-card1 = Card(["2", "3", "two"])
-card2 = Card(["2", "4", "two"])
-card3 = Card(["4", "4", "two"])
-
-print( game_test.validPlay([card1, card3], None) )
+client.run(TOKEN)
