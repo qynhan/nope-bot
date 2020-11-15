@@ -63,7 +63,7 @@ class Game:
     # cards are arrays ex. ['1', '1', 'one']
     def generateDeck(self):
         # initialize deck from carList.txt
-        with open("cardList.txt") as f:
+        with open("plainCardList.txt") as f: # todo: change back to "cardList.txt" for all cards, change to "wildCardList.txt" to include wild cards and no action cards
             self.deck = [Card(card.split(',')) for card in f.read().splitlines()]
         self.drawPile = list(self.deck)
         self.shuffleDeck()
@@ -117,9 +117,14 @@ class Game:
                 message.add_field(name="Here are the players in this game:", value=table)
             await ctx.send(embed=message)
 
-
+    # temporary implementation for testing
+    # send 0 to the prompt if to act as if the user cannot play a card, send anything else to indicate that they can play
     def canPlay(self):
-        return True
+        result = input("can play? ")
+        if result == "0":
+            return False
+        else:
+            return True
 
     def validMove(self, message):
         # message must be sent by current player and must either be a play, draw, or nope! command
@@ -132,7 +137,7 @@ class Game:
                 else:
                     self.currentPlayer.drewCard = False
                     if not self.canPlay():
-                        self.message = f'Nope! {self.currentPlayer.user.display_name} cannot play a card!'
+                        self.message = f'**Nope!** {self.currentPlayer.user.display_name} cannot play a card!'
                         self.getNextPlayer()
                         return True
                     else:
@@ -147,6 +152,10 @@ class Game:
                     else:
                         self.currentPlayer.drewCard = True
                         self.message = f'{self.currentPlayer.user.display_name} cannot play a card!\nDraw one card.  If you can play after drawing: play, if you still cannot: say **Nope!**'
+
+                        # draw card and sort hand
+                        self.currentPlayer.hand.append(self.drawCard())
+                        self.currentPlayer.hand.sort(key=lambda card: card.id)
                         return True
                 else:
                     self.message = "You are able to play, try again."
@@ -169,7 +178,7 @@ class Game:
     def strToCardList(self, message):
         # ex. br3 bg2
         cardList = []
-        print(f'message:"{message}"')
+
         for word in message.split(' '):
             card_arr = []
             if len(word) != 3:
@@ -219,9 +228,24 @@ class Game:
                     isValidColor = False
                     break
             if isValidColor:
+                # put former current card in discard pile
+                self.discardPile.append(self.currentCard)
+
+                # remove card(s) from hand
+                for i in range(len(cardList)):
+                    card = player.hand.pop(player.hand.index(cardList[i]))
+                    # make last card played the current card
+                    if i == len(cardList) - 1:
+                        self.currentCard = card
+                    # put any other cards played in the discard pile
+                    else:
+                        self.discardPile.append(card)
+
+                # todo: player leaves game when they run out of cards
                 return True
         return False
 
+    # sets current player to the next person
     def getNextPlayer(self):
         playerList = list(self.players.keys())
         self.currentPlayer = self.players[playerList[(playerList.index(self.currentPlayer.user.id) + 1) % len(playerList)]]
