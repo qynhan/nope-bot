@@ -4,6 +4,10 @@ import random
 from playerdef import Player
 from carddef import Card
 
+letterColors = {'r': '1', 'y': '2', 'b': '3', 'g': '4', 'w': '5'}
+letterType = {'1': 'one', '2': 'two', '3': 'three'}
+
+
 class Game:
     # constructor
     def __init__(self):
@@ -17,7 +21,7 @@ class Game:
         self.currentPlayer = None
 
     # add player to game, takes in user who ran the join command
-    def addPlayer(self, user : discord.User):
+    def addPlayer(self, user: discord.User):
         # do not add someone who already joined
         playerAdded = False
         if user.id not in self.players:
@@ -28,7 +32,7 @@ class Game:
         return playerAdded
 
     # remove player from game, takes in user who ran the quit command
-    def removePlayer(self, user : discord.User):
+    def removePlayer(self, user: discord.User):
         # find player in list and remove, if they have not joined yet they will not be removed
         playerQuit = False
         if user.id in self.players:
@@ -92,7 +96,8 @@ class Game:
             message.set_footer(text="The game can start when at least 3 people have joined.")
             await ctx.send(embed=message)
         else:
-            message = Embed(title=f'The current card in play is: {self.currentCard}', description=f'It is **{self.currentPlayer.user.display_name}\'s** turn!', color=0x00CFCF)
+            message = Embed(title=f'The current card in play is: {self.currentCard}',
+                            description=f'It is **{self.currentPlayer.user.display_name}\'s** turn!', color=0x00CFCF)
             if showPlayers:
                 table = ''
                 for playerID in self.players:
@@ -101,25 +106,48 @@ class Game:
                 message.add_field(name="Here are the players in this game:", value=table)
             await ctx.send(embed=message)
 
-    def checkTwo(self, card1, card2):
-        for color in card1.colors:
-            if color in card2.colors:
-                return True
-        return False
 
+    def strToCardList(self, message):
+        # ex. br3 bg2
+        cardList = []
+
+        for word in message.split(' '):
+            card_arr = []
+            if len(word) > 3:
+                return None
+            if word[0] not in list(letterColors) \
+                    or word[1] not in list(letterColors) \
+                    or word[2] not in list(letterType):
+                return None
+            card_arr.append(letterColors[word[0]])
+            card_arr.append(letterColors[word[1]])
+            card_arr.append(letterType[word[2]])
+            cardList.append(Card(card_arr))
+        return cardList
 
     # precondition the number on the top card is the same as the number of cards played
     def validPlay(self, message, player):
-        topCard = self.currentCard
-        cardList = message
-        # pickedCards = message.split(" ")
-        # for card in pickedCards:
-        #     if not player.haveCard(card):
-        #         return False
-        # for card in pickedCards:
-        #     cardList.append(player.getCard(card))
+        # check cards in hand
+        # check colors
+        # get rid of cards from hand
 
-        for check_color in self.currentCard.colors: # current card is blue red
+        # new plan
+        # string input
+        # if its valid cards
+        # cardList =  array of card objects
+        # compare cards in checklist to hand
+        # check cardlist with currentCard
+
+        # create list of card object from string message
+        cardList = self.strToCardList(message)
+        if not cardList:
+            return False
+
+        for card in cardList:
+            if card not in player.hand:
+                return False
+
+        for check_color in self.currentCard.colors:  # current card is blue red
             isValidColor = True
             for card in cardList:
                 if check_color not in card.colors:

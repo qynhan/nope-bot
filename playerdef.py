@@ -14,35 +14,6 @@ class Player:
         self.hand = []
         self.play = []
 
-    def haveCard(self, cardString):
-        haveCard = False
-
-        #ry1
-        for card in self.hand:
-            if haveCard:
-                return haveCard
-            for letter in cardString:
-                if letterColors[letter] in card.colors or letterColors[letter] == card.value :
-                    haveCard = True
-                else:
-                    haveCard = False
-
-        return haveCard
-
-    def getCard(self, cardString):
-        theCard = False
-
-        for card in self.hand:
-            if theCard:
-                return self.hand.pop(self.hand.index(card))
-            for letter in cardString:
-                if letterColors[letter] in card.colors or letterColors[letter] == card.value:
-                    theCard = True
-                else:
-                    theCard = False
-
-        return theCard
-
     # send the player their hand, title is a string that will be the beginning of the message to the player
     async def sendHand(self, title):
         # make a list of their cards

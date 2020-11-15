@@ -159,32 +159,4 @@ async def setup(ctx, user1: discord.User, user2: discord.User):
     await table(ctx)
 
 # run bot
-# client.run(TOKEN)
-
-print(test)
-game_test = Game()
-game_test.generateDeck()
-
-game_test.currentCard = Card(["2", "3", "two"])
-print(game_test.currentCard)
-card1 = Card(["2", "3", "two"])
-card2 = Card(["2", "4", "two"])
-card3 = Card(["4", "4", "two"])
-card4 = Card(["5", "0", "two"])
-card5 = Card(["3", "4", "two"])
-
-
-# print( game_test.validPlay([card1, card1], None) ) #expect true
-# print( game_test.validPlay([card1, card2], None) ) #expect true
-# print( game_test.validPlay([card1, card4], None) ) #expect true
-# print( game_test.validPlay([card4, card4], None) ) #expect true
-# print( game_test.validPlay([card2, card3], None) ) #expect false
-# print( game_test.validPlay([card1, card3], None) ) #expect false
-# print( game_test.validPlay([card1, card3], None) ) #expect false
-
-game_test.currentCard = Card(["2", "3", "three"])
-print( game_test.validPlay([card1, card1, card1], None) ) #expect true
-print( game_test.validPlay([card1, card2, card5], None) ) #expect false
-print( game_test.validPlay([card1, card4, card5], None) ) #expect true
-print( game_test.validPlay([card1, card3, card5], None) ) #expect false
-
+client.run(TOKEN)
