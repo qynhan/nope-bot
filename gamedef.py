@@ -1,4 +1,5 @@
 import discord
+from discord import Embed
 import random
 from playerdef import Player
 from carddef import Card
@@ -55,13 +56,6 @@ class Game:
     def shuffleDeck(self):
         random.shuffle(self.drawPile)
 
-    # deals the cards to the players
-    def dealCards(self):
-        player: Player
-        for player in self.players.values():
-            for i in range(7):
-                player.hand.append(self.drawCard())
-
     # returns and removes last card in deck
     def drawCard(self):
         # if draw pile is empty, shuffle discard pile into it
@@ -75,6 +69,17 @@ class Game:
         self.drawPile.pop(-1)
         return topCard
 
+    # deals the cards to the players
+    async def dealCards(self):
+        # deal each play 7 cards
+        player: Player
+        for player in self.players.values():
+            for i in range(7):
+                player.hand.append(self.drawCard())
+
+            # sort hand and send to player
+            player.hand.sort(key=lambda card: card.id)
+            await player.sendHand("You were dealt the following cards:")
 
     # debugging info
     def __repr__(self):

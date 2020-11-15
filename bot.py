@@ -87,7 +87,6 @@ async def quit(ctx):
     if result:
         await ctx.send(f'{ctx.author} left the game.')
 
-
 # start game
 @client.command(aliases=["s"])
 async def start(ctx):
@@ -99,6 +98,11 @@ async def start(ctx):
         else:
             game.status = "playing"
             await ctx.send("Ready to start!")
+            game.generateDeck()
+            await game.dealCards()
+            for playerID in game.players:
+                player = game.players[playerID]
+                await player.sendHand("It's your turn! Here is your hand:")
 
 # end game (for debugging only)
 @client.command()
@@ -109,6 +113,15 @@ async def end(ctx):
     game.newGame()
 
     await ctx.send("Game ended.")
+
+# see hand
+@client.command(aliases=["h"])
+async def hand(ctx):
+    # do not show hand when they do not have cards yet
+    if ctx.author.id not in game.players or game.status != "playing":
+        await ctx.send("You have no cards.")
+    else:
+        await game.players[ctx.author.id].sendHand("Here is your hand:")
 
 # tutorial youtube link command
 @client.command(aliases=["tutorial", "howto", "htp"])
@@ -122,7 +135,7 @@ async def howtoplay(ctx):
 @commands.check(checkDev)
 async def test(ctx):
     game.generateDeck()
-    game.dealCards()
+    await game.dealCards()
 
     for player in game.players.values():
         print(player.hand)
@@ -131,16 +144,15 @@ async def test(ctx):
             print(player.hand[i])
             await ctx.send(player.hand[i])
 
-    #for i in range(len(game.deck)):
-        #print(repr(game.deck[i]))
-        #await ctx.send(game.deck[i])
-    # have 3 accounts join the game (carly, carly's 1st alt, carly's second alt)
-    #game.addPlayer(client.get_user(467381662582308864))
-
-    # bug: bot cannot find the alt users
-    #game.addPlayer(client.get_user(467417292389482497))
-    #game.addPlayer(client.get_user(467418093514391552))
-
+# adds author and two mentioned users to a game to make testing quicker
+@client.command(aliases=['!'])
+# only developers may run this command
+@commands.check(checkDev)
+async def setup(ctx, user1: discord.User, user2: discord.User):
+    game.addPlayer(ctx.author)
+    game.addPlayer(user1)
+    game.addPlayer(user2)
+    await table(ctx)
 
 # run bot
 client.run(TOKEN)
