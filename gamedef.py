@@ -1,6 +1,7 @@
 import discord
 from discord import Embed
 import random
+import copy
 from playerdef import Player
 from carddef import Card
 
@@ -204,11 +205,14 @@ class Game:
         if len(cardList) != valueNums[self.currentCard.value]:
             return False
 
+        hand_copy = copy.deepcopy(player.hand)
         for card in cardList:
-            if card not in player.hand:
+            if card not in hand_copy:
                 return False
+            else:
+                hand_copy.remove(card)
 
-        for check_color in self.currentCard.colors:  # current card is blue red
+        for check_color in self.currentCard.colors:  # ex. current card is blue red
             isValidColor = True
             for card in cardList:
                 if check_color not in card.colors:
