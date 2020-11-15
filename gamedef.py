@@ -1,11 +1,15 @@
 import discord
 from discord import Embed
 import random
+import copy
 from playerdef import Player
 from carddef import Card
 
 letterColors = {'r': '1', 'y': '2', 'b': '3', 'g': '4', 'w': '5'}
 letterType = {'1': 'one', '2': 'two', '3': 'three'}
+# what 3rd sorting digit corresponds to what value
+valueNums = {'one' : 1, 'two' : 2, 'three' : 3, 'nominate' : 4, 'invisible' : 5, 'wild' : 6, 'reset' : 7}
+
 
 
 class Game:
@@ -198,11 +202,17 @@ class Game:
         if not cardList:
             return False
 
-        for card in cardList:
-            if card not in player.hand:
-                return False
+        if len(cardList) != valueNums[self.currentCard.value]:
+            return False
 
-        for check_color in self.currentCard.colors:  # current card is blue red
+        hand_copy = copy.deepcopy(player.hand)
+        for card in cardList:
+            if card not in hand_copy:
+                return False
+            else:
+                hand_copy.remove(card)
+
+        for check_color in self.currentCard.colors:  # ex. current card is blue red
             isValidColor = True
             for card in cardList:
                 if check_color not in card.colors:

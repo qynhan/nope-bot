@@ -54,3 +54,7 @@ class Card:
     # debugging info
     def __repr__(self):
         return f'value: {self.value}, colors: {self.colors}, id: {self.id}, str: {str(self)}'
+
+    # check card equality
+    def __eq__(self, other):
+        return self.id == other.id
