@@ -5,6 +5,8 @@ from discord import Embed
 letterColors = {'r' : 'red', 'y' : 'yellow', 'b' : 'blue', 'g' : 'green', 'w' : 'wild',
                 'n': 'nominate', 'i' :'invisible', 'R' : 'reset'}
 
+hfdghfbh = {'n' : 'nominate', 'i' : "invisible", 'R' : 'reset'}
+
 class Player:
     # constructor, takes user argument - a discord object representing a user
     def __init__(self, user : discord.user):
